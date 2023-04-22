@@ -25,20 +25,45 @@ class Player1 (GameSprite):
          #   self.rect.x -= self.speed
         #if keys[K_S] and self.rect.y<650:
            # self.rect.x += self.speed
+class Player2 (GameSprite):
+    def update(self):
+        keys =  key.get_pressed()
+        if keys[K_UP] and self.rect.y>0:
+             self.rect.y -= self.speed
+        if keys[K_DOWN] and self.rect.y<400:
+            self.rect.y += self.speed
+        #if keys[K_W] and self.rect.y>0:
+         #   self.rect.x -= self.speed
+        #if keys[K_S] and self.rect.y<650:
+           # self.rect.x += self.speed
+    
+class Ball (GameSprite):
+    def __init__(self, image_file, player_x, player_y, speed, width, hight):
+        super().__init__(image_file, player_x, player_y, speed, width, hight)
+        self.speed_x = speed
+        self.speed_y = speed
+    def update(self):
+        self.rect.x += self.speed_x
+        self.rect.y += self.speed_y
+        if (self.rect.y < 0) or (self.rect.y > 490):
+            self.speed_y *= -1
+
 background_color = (0,0,255)
 background = Surface((700,500))
 background.fill(background_color)
 window = display.set_mode((700,500))
 game = True
 finish = False
-player1 = Player1('rocket.png',325,450,10, 50 , 50)
+player1 = Player1('rocket.png',60,200,10, 20 , 100)
+player2 = Player2('rocket.png',640,200,10, 20 , 100)
+ball = Ball('rocket.png',100,400,2, 10 , 10)
 clock = time.Clock()
 FPS = 60
 font.init()
 font2 = font.SysFont('Arial', 30)
-win = font2.render('You WIN', True, (0, 255, 0))
-loser = font2.render('You Lose', True, (255, 0 , 0))
 
+loser1 = font2.render('Player1 Lose', True, (0, 255, 0))
+loser2 = font2.render('Player2 Lose', True, (0, 255 , 0))
         
     
 while game == True:
@@ -49,6 +74,21 @@ while game == True:
         window.blit(background,(0,0))
         player1.reset()
         player1.update()
+        player2.reset()
+        player2.update()
+        ball.reset()
+        ball.update()
+
+        if sprite.collide_rect(ball, player1):
+            ball.speed_x *= -1
+        if sprite.collide_rect(ball, player2):
+            ball.speed_x *= -1
+        if ball.rect.x < 0:
+            finish = True
+            window.blit(loser1,(300,250))
+        if ball.rect.x > 700:
+            finish = True
+            window.blit(loser2,(300,250))
        
 
     clock.tick(FPS)
