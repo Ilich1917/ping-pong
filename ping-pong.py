@@ -40,6 +40,8 @@ class Player2 (GameSprite):
 class Ball (GameSprite):
     def __init__(self, image_file, player_x, player_y, speed, width, hight):
         super().__init__(image_file, player_x, player_y, speed, width, hight)
+        self.image.fill((0 , 0 , 255))
+        draw.circle(self.image, (25,100,60), (width // 2 , hight // 2), width // 2 )
         self.speed_x = speed
         self.speed_y = speed
     def update(self):
